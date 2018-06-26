@@ -7,7 +7,7 @@ You will need Gauge and Gauge-csharp plugin installed before installing `Lib`.
 
 ## Build
 
-From the root of this repository, run (`build.sh` on MONO `build.cmd` on Windows)
+From the root of this repository, run (`build.sh` on Unix (with `dotnet core`) `build.cmd` on Windows)
  * `./build.sh build`
  * `./build.sh test`, runs nunit tests
  * `.build.sh package`, creates the `nuget` package;
