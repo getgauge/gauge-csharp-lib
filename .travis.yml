@@ -4,6 +4,8 @@ os:
 
 language: csharp
 
+before_script:
+  - chmod +x ./build.sh
 dotnet: 2.1.3
 
 script:
