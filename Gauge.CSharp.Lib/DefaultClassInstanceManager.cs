@@ -16,7 +16,7 @@
 // along with Gauge-CSharp.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -24,7 +24,7 @@ namespace Gauge.CSharp.Lib
 {
     public class DefaultClassInstanceManager : IClassInstanceManager
     {
-        private static readonly Hashtable ClassInstanceMap = new Hashtable();
+        private readonly ConcurrentDictionary<Type, object> ClassInstanceMap = new ConcurrentDictionary<Type, object>();
 
         public void Initialize(List<Assembly> assemblies)
         {
@@ -36,7 +36,7 @@ namespace Gauge.CSharp.Lib
             if (ClassInstanceMap.ContainsKey(declaringType))
                 return ClassInstanceMap[declaringType];
             var instance = Activator.CreateInstance(declaringType);
-            ClassInstanceMap.Add(declaringType, instance);
+            ClassInstanceMap.TryAdd(declaringType, instance);
             return instance;
         }
 
