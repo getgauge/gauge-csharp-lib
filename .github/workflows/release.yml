@@ -1,0 +1,24 @@
+name: release
+
+on: [deployment]
+
+jobs:
+  release:
+    name: Deploy to nuget gallery
+    runs-on: windows-latest
+    env:
+      GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+      NUGET_API_KEY: '${{ secrets.NUGET_API_KEY }}'
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 2.2.108
+
+      - name: build package
+        run: ./build.cmd package
+
+      - name: Upload nuget package
+        run: |
+          "try{gci Gauge.CSharp.Lib*.nupkg | select -f 1 | %{nuget.exe push $_ $env:NUGET_API_KEY -Source https://www.nuget.org/api/v2/package}}catch{Write-Error $_;exit -1}"

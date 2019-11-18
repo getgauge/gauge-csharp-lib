@@ -1,0 +1,30 @@
+name: .NET Core
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 2.2.108
+
+    - name: Build with dotnet on windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        ./build.cmd build
+        ./build.cmd test
+
+    - name: Build with dotnet on ubuntu
+      if: matrix.os != 'windows-latest'
+      run: |
+        ./build.sh build
+        ./build.sh test
