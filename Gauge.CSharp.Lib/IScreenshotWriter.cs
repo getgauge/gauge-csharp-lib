@@ -21,9 +21,9 @@ namespace Gauge.CSharp.Lib
 {
     /// <summary>
     ///     Defines a custom implementation to capture screenshot on failure.
-    ///     Deprecated in favour of <see cref="ICustomScreenshotGrabber"/>
+    ///     Deprecated in favour of <see cref="ICustomScreenshotWriter"/>
     /// </summary>
-    [Obsolete("Please use ICustomScreenshotGrabber instead. This interface is likely to be removed in future releases.")]
+    [Obsolete("Please use ICustomScreenshotWriter instead. This interface is likely to be removed in future releases.")]
     public interface IScreenGrabber
     {
         /// <summary>
@@ -38,6 +38,7 @@ namespace Gauge.CSharp.Lib
     /// <summary>
     ///     Defines a custom implementation to capture screenshot on failure.
     /// </summary>
+    [Obsolete("Please use ICustomScreenshotWriter instead. This interface is likely to be removed in future releases.")]
     public interface ICustomScreenshotGrabber
     {
         /// <summary>
@@ -47,5 +48,18 @@ namespace Gauge.CSharp.Lib
         /// </summary>
         /// <returns>A byte array, containing the bitmap equivalent of the image.</returns>
         byte[] TakeScreenShot();
+    }
+    /// <summary>
+    ///     Defines a custom implementation to capture screenshot on failure.
+    /// </summary>
+    public interface ICustomScreenshotWriter
+    {
+        /// <summary>
+        ///     Define your own way to take screenshot, that is best applicable to your system-under-test.
+        ///     Gauge can take this screenshot and use it for reporting.
+        ///     By default, Gauge attempts to capture the active window screenshot, on failure.
+        /// </summary>
+        /// <returns>A screenshot file path, containing the screenshot path as string.</returns>
+        string TakeScreenShot();
     }
 }

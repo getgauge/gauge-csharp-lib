@@ -21,18 +21,18 @@ namespace Gauge.CSharp.Lib
 {
     public class GaugeScreenshots
     {
-        private static ICustomScreenshotGrabber screenGrabber = new DefaultScreenGrabber();
+        private static ICustomScreenshotWriter screenshotWriter = new DefaultScreenshotWriter();
 
-        internal static List<byte[]> Screenshots = new List<byte[]>();
+        internal static List<string> ScreenshotFiles = new List<string>();
 
-        public static void RegisterCustomScreenshotGrabber(ICustomScreenshotGrabber customScreenshotGrabber)
+        public static void RegisterCustomScreenshotWriter(ICustomScreenshotWriter customScreenshotWriter)
         {
-            screenGrabber = customScreenshotGrabber;
+            screenshotWriter = customScreenshotWriter;
         }
 
         public static void Capture()
         {
-            Screenshots.Add(screenGrabber.TakeScreenShot());
+            ScreenshotFiles.Add(screenshotWriter.TakeScreenShot());
         }
     }
 }
