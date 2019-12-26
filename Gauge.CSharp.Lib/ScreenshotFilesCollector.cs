@@ -19,18 +19,18 @@ using System.Collections.Generic;
 
 namespace Gauge.CSharp.Lib
 {
-    public class ScreenshotCollector
+    public class ScreenshotFilesCollector
     {
-        public static List<byte[]> GetAllPendingScreenshots()
+        public static List<string> GetAllPendingScreenshotFiles()
         {
-            var screenshots = new List<byte[]>(GaugeScreenshots.Screenshots);
+            var screenshotFiles = new List<string>(GaugeScreenshots.ScreenshotFiles);
             Clear();
-            return screenshots;
+            return screenshotFiles;
         }
 
         public static void Clear()
         {
-            GaugeScreenshots.Screenshots.Clear();
+            GaugeScreenshots.ScreenshotFiles.Clear();
         }
     }
 }
