@@ -31,8 +31,7 @@ namespace Gauge.CSharp.Lib
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "gauge_screenshot",
-                    Arguments = screenshotPath,
-                    UseShellExecute = true
+                    Arguments = screenshotPath
                 }
             };
             screenshotProcess.Start();

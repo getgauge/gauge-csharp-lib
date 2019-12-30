@@ -4,9 +4,9 @@
     <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.0;net45;net46</TargetFrameworks>
     <TargetFramework Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.0</TargetFramework>
     <Description>CSharp bindings for Gauge. Write CSharp step implementation for Gauge specs. https://gauge.org</Description>
-    <Version>0.7.4</Version>
-    <AssemblyVersion>0.7.4.0</AssemblyVersion>
-    <FileVersion>0.7.4.0</FileVersion>
+    <Version>0.7.5</Version>
+    <AssemblyVersion>0.7.5.0</AssemblyVersion>
+    <FileVersion>0.7.5.0</FileVersion>
     <Authors>getgauge</Authors>
     <Company>ThoughtWorks Inc.</Company>
     <Copyright>Copyright © ThoughtWorks Inc. 2018</Copyright>
