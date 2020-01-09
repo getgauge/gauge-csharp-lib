@@ -25,7 +25,7 @@ namespace Gauge.CSharp.Lib
     {
         public string TakeScreenShot()
         {
-            var screenshotPath = Path.Combine(Environment.GetEnvironmentVariable("screenshots_dir"), String.Format("screenshot-{0}.png", Guid.NewGuid().ToString()));
+            var screenshotPath = Path.Combine(Environment.GetEnvironmentVariable("gauge_screenshots_dir"), String.Format("screenshot-{0}.png", Guid.NewGuid().ToString()));
             var screenshotProcess = new Process
             {
                 StartInfo = new ProcessStartInfo

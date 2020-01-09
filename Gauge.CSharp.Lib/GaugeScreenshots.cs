@@ -43,7 +43,7 @@ namespace Gauge.CSharp.Lib
         {
             if (screenshotGrabber != null)
             {
-                var screenshotPath = Path.Combine(Environment.GetEnvironmentVariable("screenshots_dir"), String.Format("screenshot-{0}.png", Guid.NewGuid().ToString()));
+                var screenshotPath = Path.Combine(Environment.GetEnvironmentVariable("gauge_screenshots_dir"), String.Format("screenshot-{0}.png", Guid.NewGuid().ToString()));
                 var screenshotBytes = screenshotGrabber.TakeScreenShot();
                 File.WriteAllBytes(screenshotPath, screenshotBytes);
                 ScreenshotFiles.Add(Path.GetFileName(screenshotPath));
