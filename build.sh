@@ -17,7 +17,7 @@ function test() {
 function package() {
     checkCommand "dotnet"
     rm -rf deploy artifacts
-    dotnet pack -c release -o ../artifacts Gauge.CSharp.Lib
+    dotnet pack -c release -o ./artifacts Gauge.CSharp.Lib
 }
 
 tasks=(build test package)
