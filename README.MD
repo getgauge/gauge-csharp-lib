@@ -14,7 +14,10 @@ From the root of this repository, run (`build.sh` on Unix (with `dotnet core`) `
  * `.build.sh package`, creates the `nuget` package;
 
 ## License
-This project is released under [GPLv3](http://www.gnu.org/licenses/gpl-3.0.txt).
+
+This program is licensed under:
+
+[Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt)
 
 ## Sponsors
 
