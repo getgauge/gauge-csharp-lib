@@ -1,8 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard2.1;net45;net46</TargetFrameworks>
-    <TargetFramework Condition=" '$(OS)' != 'Windows_NT' ">netstandard2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <Description>CSharp bindings for Gauge. Write CSharp step implementation for Gauge specs. https://gauge.org</Description>
     <Version>0.8.0</Version>
     <AssemblyVersion>0.8.0.0</AssemblyVersion>

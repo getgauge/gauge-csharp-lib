@@ -8,12 +8,13 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 
 namespace Gauge.CSharp.Lib
 {
     public class DefaultClassInstanceManager : IClassInstanceManager
     {
-        private readonly ConcurrentDictionary<Type, object> ClassInstanceMap = new ConcurrentDictionary<Type, object>();
+        private readonly ThreadLocal<ConcurrentDictionary<Type, object>> ClassInstanceMap = new ThreadLocal<ConcurrentDictionary<Type, object>>(() => new ConcurrentDictionary<Type, object>());
 
         public void Initialize(List<Assembly> assemblies)
         {
@@ -22,10 +23,10 @@ namespace Gauge.CSharp.Lib
 
         public object Get(Type declaringType)
         {
-            if (ClassInstanceMap.ContainsKey(declaringType))
-                return ClassInstanceMap[declaringType];
+            if (ClassInstanceMap.Value.ContainsKey(declaringType))
+                return ClassInstanceMap.Value[declaringType];
             var instance = Activator.CreateInstance(declaringType);
-            ClassInstanceMap.TryAdd(declaringType, instance);
+            ClassInstanceMap.Value.TryAdd(declaringType, instance);
             return instance;
         }
 
@@ -41,7 +42,7 @@ namespace Gauge.CSharp.Lib
 
         public void ClearCache()
         {
-            ClassInstanceMap.Clear();
+            ClassInstanceMap.Value.Clear();
         }
     }
 }
