@@ -10,22 +10,22 @@ namespace Gauge.CSharp.Lib
 
         public static object Get(string key)
         {
-            return CommonDataStore.WithDataStore(store).Get(key);
+            return store.Get(key);
         }
 
         public static T Get<T>(string key)
         {
-            return CommonDataStore.WithDataStore(store).Get<T>(key);
+            return store.Get<T>(key);
         }
 
         public static void Add(string key, object value)
         {
-            CommonDataStore.WithDataStore(store).Add(key, value);
+            store.Add(key, value);
         }
 
         public static void Clear()
         {
-            CommonDataStore.WithDataStore(store).Clear();
+            store.Clear();
         }
     }
 }
