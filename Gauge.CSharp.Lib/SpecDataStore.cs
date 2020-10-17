@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace Gauge.CSharp.Lib
@@ -10,37 +9,22 @@ namespace Gauge.CSharp.Lib
 
         public static object Get(string key)
         {
-            lock (store)
-            {
-                object outVal;
-                var valueExists = store.Value.TryGetValue(key, out outVal);
-                return valueExists ? outVal : null;
-            }
+            return store.Get(key);
         }
 
         public static T Get<T>(string key)
         {
-            lock (store)
-            {
-                return (T)Get(key);
-            }
+            return store.Get<T>(key);
         }
 
         public static void Add(string key, object value)
         {
-            lock (store)
-            {
-                store.Value[key] = value;
-
-            }
+            store.Add(key, value);
         }
 
         public static void Clear()
         {
-            lock (store)
-            {
-                store.Value.Clear();
-            }
+            store.Clear();
         }
     }
 }
