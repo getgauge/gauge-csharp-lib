@@ -4,7 +4,8 @@
 
 `Gauge.CSharp.Lib` is a dll that brings in Gauge's data types to C#. It is hosted in [Nuget](https://www.nuget.org/packages/Gauge.CSharp.Lib/).
 
-You will need Gauge and Gauge-csharp plugin installed before installing `Lib`.
+You will need [Gauge](https://docs.gauge.org/getting_started/installing-gauge.html)
+and [Gauge-dotnet plugin](https://github.com/getgauge/gauge-dotnet) installed before installing `Lib`.
 
 ## Build
 
