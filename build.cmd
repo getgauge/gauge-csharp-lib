@@ -17,6 +17,6 @@ goto :eof
 
 :package
     rmdir /s /q artifacts
-    dotnet pack -c release -o ../artifacts Gauge.CSharp.Lib
+    dotnet pack -c release -o artifacts Gauge.CSharp.Lib
     goto :eof
 
