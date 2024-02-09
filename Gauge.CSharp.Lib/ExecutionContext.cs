@@ -93,17 +93,15 @@ namespace Gauge.CSharp.Lib {
         
         [Serializable()]
         public class StepDetails {
-            public StepDetails(String text, bool isFailing, string parsedText, string stackTrace, string errorMessage, bool isConcept) {
+            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage, bool isConcept) {
                 this.Text = text;
-                this.ParsedText = parsedText;
                 this.StackTrace = stackTrace;
                 this.ErrorMessage = errorMessage;
                 this.IsFailing = isFailing;
                 this.IsConcept = isConcept;
             }
 
-            public StepDetails() {
-            }
+            public StepDetails() {}
 
             /**
             * @return True if the current spec or scenario or step is failing due to error.
@@ -119,11 +117,6 @@ namespace Gauge.CSharp.Lib {
             * @return The name of the step as given in the spec file.
             */
             public String Text { get; } = "";
-
-            /**
-            * @return The name of the step as given in the spec file after parsing params.
-            */
-            public String ParsedText { get; } = "";
 
             /**
             * @return Stacktrace if step is failing.
