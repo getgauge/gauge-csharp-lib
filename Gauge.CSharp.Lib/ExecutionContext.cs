@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+
 /**
 * Gives the information about the current execution at runtime - spec, scenario, step that is running.
 */
@@ -93,12 +93,11 @@ namespace Gauge.CSharp.Lib {
         
         [Serializable()]
         public class StepDetails {
-            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage, bool isConcept) {
+            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage) {
                 this.Text = text;
                 this.StackTrace = stackTrace;
                 this.ErrorMessage = errorMessage;
                 this.IsFailing = isFailing;
-                this.IsConcept = isConcept;
             }
 
             public StepDetails() {}
@@ -107,11 +106,6 @@ namespace Gauge.CSharp.Lib {
             * @return True if the current spec or scenario or step is failing due to error.
             */
             public Boolean IsFailing { get; }
-
-            /**
-            * @return True if the current step is a concept.
-            */
-            public Boolean IsConcept { get; }
 
             /**
             * @return The name of the step as given in the spec file.
