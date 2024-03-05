@@ -125,14 +125,16 @@ namespace Gauge.CSharp.Lib {
 
         [Serializable]
         public class Scenario {
-            public Scenario(String name, bool isFailing, IEnumerable<String> tags) {
+            public Scenario(String name, bool isFailing, IEnumerable<String> tags, int maxRetries, int currentRetry) {
                 this.Name = name;
                 this.IsFailing = isFailing;
                 this.Tags = tags;
+                this.Retries = new RetriesInfo(maxRetries: maxRetries, curruntRetry: currentRetry);
             }
 
             public Scenario() {
                 Tags = new List<String>();
+                Retries = new RetriesInfo();
             }
 
             /**
@@ -149,6 +151,31 @@ namespace Gauge.CSharp.Lib {
             * @return Name of the Scenario as mentioned in the scenario heading
             */
             public String Name { get; } = "";
+
+            /**
+            * @return retry info
+            */
+            public RetriesInfo Retries { get; }
+        }
+
+        [Serializable]
+        public class RetriesInfo {
+            public RetriesInfo(int maxRetries, int curruntRetry) {
+                this.MaxRetries = maxRetries;
+                this.CurrentRetry = curruntRetry;
+            }
+
+            public RetriesInfo() {}
+
+            /**
+            * @return the count of maximum execution retries
+            */
+            public int MaxRetries { get; } = 0;
+
+            /**
+            * @return the count of the current execution retry
+            */
+            public int CurrentRetry{ get; } = 0;
         }
     }
 }
