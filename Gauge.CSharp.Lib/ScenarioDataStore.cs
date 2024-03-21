@@ -26,6 +26,5 @@ namespace Gauge.CSharp.Lib
         {
             store.Clear();
         }
-        internal bool SkipScenario = false;
     }
 }
