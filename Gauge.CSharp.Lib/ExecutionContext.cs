@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 
 /**
 * Gives the information about the current execution at runtime - spec, scenario, step that is running.
@@ -98,6 +99,7 @@ namespace Gauge.CSharp.Lib {
                 this.StackTrace = stackTrace;
                 this.ErrorMessage = errorMessage;
                 this.IsFailing = isFailing;
+                this.Parameters = null;
             }
 
             public StepDetails() {}
@@ -121,6 +123,11 @@ namespace Gauge.CSharp.Lib {
             * @return Error message if step is failing.
             */
             public String ErrorMessage { get; } = "";
+
+            /**
+            * Dictionary of all the parameters in the Step
+            */
+            public Dictionary<string, object> Parameters { get; set; }
         }
 
         [Serializable]
