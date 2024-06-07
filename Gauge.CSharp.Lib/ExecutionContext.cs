@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 
 /**
 * Gives the information about the current execution at runtime - spec, scenario, step that is running.
@@ -127,7 +126,7 @@ namespace Gauge.CSharp.Lib {
             /**
             * Dictionary of all the parameters in the Step
             */
-            public Dictionary<string, object> Parameters { get; set; }
+            public List<List<string>> Parameters { get; set; }
         }
 
         [Serializable]
