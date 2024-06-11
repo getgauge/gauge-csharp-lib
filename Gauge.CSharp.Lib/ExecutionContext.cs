@@ -93,12 +93,14 @@ namespace Gauge.CSharp.Lib {
         
         [Serializable()]
         public class StepDetails {
-            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage) {
+            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage, 
+                List<List<string>> parameters, Table parametersTable) {
                 this.Text = text;
                 this.StackTrace = stackTrace;
                 this.ErrorMessage = errorMessage;
                 this.IsFailing = isFailing;
-                this.Parameters = null;
+                this.Parameters = parameters;
+                this.ParametersTable = parametersTable;
             }
 
             public StepDetails() {}
@@ -124,9 +126,14 @@ namespace Gauge.CSharp.Lib {
             public String ErrorMessage { get; } = "";
 
             /**
-            * Dictionary of all the parameters in the Step
+            * @return All the parameters in the Step
             */
-            public List<List<string>> Parameters { get; set; }
+            public List<List<string>> Parameters { get; }
+
+            /**
+            * @return Table parameters in the Step
+            */
+            public Table ParametersTable { get; }
         }
 
         [Serializable]
