@@ -4,6 +4,9 @@
  *  See LICENSE.txt in the project root for license information.
  *----------------------------------------------------------------*/
 using System;
+using System.Runtime.Serialization.Json;
+using System.IO;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +33,16 @@ namespace Gauge.CSharp.Lib
             _rows = new List<List<string>>();
             _tableRows = new List<TableRow>();
         }
+
+        public Table FromJSon(string asJSon)
+	    {
+            var serializer = new DataContractJsonSerializer(typeof(Table));
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(asJSon)))
+            {
+                var obj = serializer.ReadObject(ms);
+                return obj as Table;
+            }
+	    }
 
         /// <summary>
         ///     Add a row of data to the table.
