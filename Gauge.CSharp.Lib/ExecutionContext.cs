@@ -102,6 +102,14 @@ namespace Gauge.CSharp.Lib {
                 this.Parameters = parameters;
             }
 
+            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage) {
+                this.Text = text;
+                this.StackTrace = stackTrace;
+                this.ErrorMessage = errorMessage;
+                this.IsFailing = isFailing;
+                this.Parameters = null;
+            }
+
             public StepDetails() {}
 
             /**
