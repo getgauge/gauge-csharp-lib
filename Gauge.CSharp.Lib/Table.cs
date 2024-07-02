@@ -4,6 +4,10 @@
  *  See LICENSE.txt in the project root for license information.
  *----------------------------------------------------------------*/
 using System;
+using System.Reflection;
+using System.Runtime.Serialization.Json;
+using System.IO;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +34,40 @@ namespace Gauge.CSharp.Lib
             _rows = new List<List<string>>();
             _tableRows = new List<TableRow>();
         }
+
+        /// <summary>
+        ///     Creates a new Table type from JSON string
+        /// </summary>
+        /// <param name="asJson">A JSON string representing the Table object.</param>
+        public Table(string asJSon)
+        {
+            var serializer = new DataContractJsonSerializer(typeof(Table));
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(asJSon)))
+            {
+                var deserializedTable = serializer.ReadObject(ms) as Table;
+                if (deserializedTable != null)
+                {
+                    // Use LINQ with reflection to copy properties
+                    typeof(Table).GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                        .ToList()
+                        .ForEach(field => field.SetValue(this, field.GetValue(deserializedTable)));
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid JSON string for Table deserialization.");
+                }
+            }
+        }
+
+        public Table FromJSon(string asJSon)
+	    {
+            var serializer = new DataContractJsonSerializer(typeof(Table));
+            using (var ms = new MemoryStream(Encoding.UTF8.GetBytes(asJSon)))
+            {
+                var obj = serializer.ReadObject(ms);
+                return obj as Table;
+            }
+	    }
 
         /// <summary>
         ///     Add a row of data to the table.

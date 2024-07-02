@@ -93,11 +93,21 @@ namespace Gauge.CSharp.Lib {
         
         [Serializable()]
         public class StepDetails {
+            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage, 
+                                List<List<string>> parameters) {
+                this.Text = text;
+                this.StackTrace = stackTrace;
+                this.ErrorMessage = errorMessage;
+                this.IsFailing = isFailing;
+                this.Parameters = parameters;
+            }
+
             public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage) {
                 this.Text = text;
                 this.StackTrace = stackTrace;
                 this.ErrorMessage = errorMessage;
                 this.IsFailing = isFailing;
+                this.Parameters = null;
             }
 
             public StepDetails() {}
@@ -121,6 +131,11 @@ namespace Gauge.CSharp.Lib {
             * @return Error message if step is failing.
             */
             public String ErrorMessage { get; } = "";
+
+            /**
+            * @return All the parameters in the Step
+            */
+            public List<List<string>> Parameters { get; }
         }
 
         [Serializable]
