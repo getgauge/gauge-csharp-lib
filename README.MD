@@ -1,5 +1,5 @@
 # Gauge CSharp Lib
-[![Build Status](https://travis-ci.org/getgauge/gauge-csharp-lib.svg?branch=master)](https://travis-ci.org/getgauge/gauge-csharp-lib)
+[![Build Status](https://github.com/getgauge/gauge-csharp-lib/actions/workflows/build.yml/badge.svg)](https://github.com/getgauge/gauge-csharp-lib/actions/workflows/build.yml)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v1.4%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
 `Gauge.CSharp.Lib` is a dll that brings in Gauge's data types to C#. It is hosted in [Nuget](https://www.nuget.org/packages/Gauge.CSharp.Lib/).
