@@ -3,131 +3,80 @@
  *  Licensed under the Apache License, Version 2.0
  *  See LICENSE.txt in the project root for license information.
  *----------------------------------------------------------------*/
-using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
-namespace Gauge.CSharp.Lib
+namespace Gauge.CSharp.Lib;
+
+/// <summary>
+///     <remarks>
+///         FOR GAUGE INTERNAL USE ONLY.
+///     </remarks>
+/// </summary>
+public static class DataStoreFactory
 {
+    private static DataStore _suiteDataStore = null;
+    private static readonly object _suiteDataStoreLock = new();
+    private static readonly ConcurrentDictionary<int, ConcurrentDictionary<DataStoreType, DataStore>> _dataStores = new();
 
+    internal static DataStore SuiteDataStore
+    {
+        get
+        {
+            lock (_suiteDataStoreLock)
+            {
+                return _suiteDataStore;
+            }
+        }
+        private set
+        {
+            lock (_suiteDataStoreLock)
+            {
+                _suiteDataStore ??= value;
+            }
+        }
+    }
 
     /// <summary>
-    /// Holds various DataStores, that have lifetime defined as per their scope.
-    /// Ex: ScenarioDataStore has its scope defined to a particular scenario.
-    /// <para>
-    /// This API is deprecated. Use specific data stores instead.
-    /// Ex SuiteDataStore, SpecDataStore, ScenarioDataStore etc.
-    /// </para>
+    ///     <remarks>
+    ///         FOR GAUGE INTERNAL USE ONLY.
+    ///     </remarks>
+    ///     Gets a datastore by stream number.
     /// </summary>
-    [Obsolete(@"DataStoreFactory is no longer valid. This API will throw an Exception in multithreaded execution.")]
-    public class DataStoreFactory
+    internal static IReadOnlyDictionary<DataStoreType, DataStore> GetDataStoresByStream(int streamId)
     {
-        private static readonly Dictionary<DataStoreType, DataStore> DataStores =
-            new Dictionary<DataStoreType, DataStore>
-            {
-                {DataStoreType.Suite, new DataStore()},
-                {DataStoreType.Spec, new DataStore()},
-                {DataStoreType.Scenario, new DataStore()}
-            };
+        return _dataStores.GetValueOrDefault(streamId, new());
+    }
 
-        /// <summary>
-        /// Access the Suite level DataStore.
-        /// <para>
-        /// [Deprecated] Use <see cref="Gauge.CSharp.Lib.SuiteDataStore"/> class to fetch/add data.
-        /// </para>
-        /// </summary>
-        [Obsolete(@"SuiteDataStore accessor is deprecated. Use SuiteDataStore.Get/SuiteDataStore.Put to fetch/add data.")]
-        public static DataStore SuiteDataStore
+    /// <summary>
+    ///     <remarks>
+    ///         FOR GAUGE INTERNAL USE ONLY.
+    ///     </remarks>
+    ///     Adds a datastore by stream number.
+    /// </summary>
+    internal static void AddDataStore(int stream, DataStoreType storeType)
+    {
+        var dataStore = new DataStore();
+        switch (storeType)
         {
-            get
-            {
-                if (IsMultithreaded())
-                {
-                    throw new Exception("DataStoreFactory cannot be used for multithreaded execution. Use SuiteDataStore.");
-                }
-                return DataStores[DataStoreType.Suite];
-            }
+            case DataStoreType.Suite: SetSuiteDataStore(stream, dataStore); break;
+            case DataStoreType.Spec:
+            case DataStoreType: SetStreamDataStore(stream, storeType, dataStore); break;
+        }
+    }
+
+    private static void SetSuiteDataStore(int stream, DataStore dataStore)
+    {
+        SuiteDataStore = dataStore;
+    }
+
+    private static void SetStreamDataStore(int stream, DataStoreType storeType, DataStore dataStore)
+    {
+        if (!_dataStores.TryGetValue(stream, out ConcurrentDictionary<DataStoreType, DataStore> value))
+        {
+            value = new ConcurrentDictionary<DataStoreType, DataStore>();
+            _dataStores[stream] = value;
         }
 
-        /// <summary>
-        /// Access the Specification level DataStore.
-        /// <para>
-        /// [Deprecated] Use <see cref="Gauge.CSharp.Lib.SpecDataStore"/> class to fetch/add data.
-        /// </para>
-        /// </summary>
-        [Obsolete(@"SpecDataStore accessor is deprecated. Use SpecDataStore.Get/SpecDataStore.Put to fetch/add data.")]
-        public static DataStore SpecDataStore
-        {
-            get
-            {
-                if (IsMultithreaded())
-                {
-                    throw new Exception("DataStoreFactory cannot be used for multithreaded execution. Use SpecDataStore.");
-                }
-                return DataStores[DataStoreType.Spec];
-            }
-        }
-
-        /// <summary>
-        /// Access the Scenario level DataStore.
-        /// <para>
-        /// [Deprecated] Use <see cref="Gauge.CSharp.Lib.ScenarioDataStore"/> class to fetch/add data.
-        /// </para>
-        /// </summary>
-        [Obsolete(@"ScenarioDataStore accessor is deprecated. Use ScenarioDataStore.Get/ScenarioDataStore.Put to fetch/add data.")]
-        public static DataStore ScenarioDataStore
-        {
-            get
-            {
-                if (IsMultithreaded())
-                {
-                    throw new Exception("DataStoreFactory cannot be used for multithreaded execution. Use ScenarioDataStore.");
-                }
-                return DataStores[DataStoreType.Spec];
-            }
-        }
-
-        /// <summary>
-        ///     <remarks>
-        ///         FOR GAUGE INTERNAL USE ONLY.
-        ///     </remarks>
-        ///     Initializes the Suite level DataStore.
-        /// </summary>
-        public static void InitializeSuiteDataStore()
-        {
-            DataStores[DataStoreType.Suite].Initialize();
-            Gauge.CSharp.Lib.SuiteDataStore.Clear();
-        }
-
-        /// <summary>
-        ///     <remarks>
-        ///         FOR GAUGE INTERNAL USE ONLY.
-        ///     </remarks>
-        ///     Initializes the Spec level DataStore.
-        /// </summary>
-        public static void InitializeSpecDataStore()
-        {
-            DataStores[DataStoreType.Spec].Initialize();
-            Gauge.CSharp.Lib.SpecDataStore.Clear();
-        }
-
-        /// <summary>
-        ///     <remarks>
-        ///         FOR GAUGE INTERNAL USE ONLY.
-        ///     </remarks>
-        ///     Initializes the Scenario level DataStore.
-        /// </summary>
-        public static void InitializeScenarioDataStore()
-        {
-            DataStores[DataStoreType.Scenario].Initialize();
-            Gauge.CSharp.Lib.ScenarioDataStore.Clear();
-        }
-
-        private static Boolean IsMultithreaded()
-        {
-            var multithreaded = Environment.GetEnvironmentVariable("enable_multithreading");
-            if (String.IsNullOrEmpty(multithreaded))
-                return false;
-            return Boolean.Parse(multithreaded);
-        }
+        value[storeType] = dataStore;
     }
 }

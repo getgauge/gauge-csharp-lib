@@ -3,26 +3,25 @@
  *  Licensed under the Apache License, Version 2.0
  *  See LICENSE.txt in the project root for license information.
  *----------------------------------------------------------------*/
-using System;
-using System.Collections.Generic;
 using System.Reflection;
 
-namespace Gauge.CSharp.Lib
+namespace Gauge.CSharp.Lib;
+
+public interface IClassInstanceManager
 {
-    public interface IClassInstanceManager
-    {
-        void Initialize(List<Assembly> assemblies);
+    void Initialize(List<Assembly> assemblies);
 
 
-        object Get(Type declaringType);
+    object Get(Type declaringType);
+
+    Task InvokeMethod(MethodInfo method, int stream, params object[] parameters);
 
 
-        void StartScope(string tag);
+    void StartScope(string tag);
 
 
-        void CloseScope();
+    void CloseScope();
 
 
-        void ClearCache();
-    }
+    void ClearCache();
 }

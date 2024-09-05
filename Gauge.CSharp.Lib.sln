@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34601.278
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gauge.CSharp.Lib", "Gauge.CSharp.Lib\Gauge.CSharp.Lib.csproj", "{AF9917DE-C4A9-46BA-B84B-70E4E239DFBD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gauge.CSharp.Lib.UnitTests", "Gauge.CSharp.Lib.UnitTests\Gauge.CSharp.Lib.UnitTests.csproj", "{9CE805C0-70DC-4759-8EFE-EF7E40937B3B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Folder", "Solution Folder", "{15DD7BC8-46FF-48E6-92A3-7674FA62ABB8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

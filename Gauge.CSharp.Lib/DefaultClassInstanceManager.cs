@@ -4,45 +4,71 @@
  *  See LICENSE.txt in the project root for license information.
  *----------------------------------------------------------------*/
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
 
-namespace Gauge.CSharp.Lib
+namespace Gauge.CSharp.Lib;
+
+public class DefaultClassInstanceManager : IClassInstanceManager
 {
-    public class DefaultClassInstanceManager : IClassInstanceManager
+    private static readonly ConcurrentDictionary<Type, object> ClassInstanceMap = new();
+
+    public void Initialize(List<Assembly> assemblies)
     {
-        private readonly ThreadLocal<ConcurrentDictionary<Type, object>> ClassInstanceMap = new ThreadLocal<ConcurrentDictionary<Type, object>>(() => new ConcurrentDictionary<Type, object>());
+        //nothing to do
+    }
 
-        public void Initialize(List<Assembly> assemblies)
-        {
-            //nothing to do
-        }
+    public object Get(Type declaringType)
+    {
+        if (ClassInstanceMap.ContainsKey(declaringType))
+            return ClassInstanceMap[declaringType];
+        var instance = Activator.CreateInstance(declaringType);
+        ClassInstanceMap.TryAdd(declaringType, instance);
+        return instance;
+    }
 
-        public object Get(Type declaringType)
+    public async Task InvokeMethod(MethodInfo method, int stream, params object[] parameters)
+    {
+        SetDataStores(stream);
+        var instance = Get(method.DeclaringType);
+        var response = method.Invoke(instance, parameters);
+        if (response is Task task)
         {
-            if (ClassInstanceMap.Value.ContainsKey(declaringType))
-                return ClassInstanceMap.Value[declaringType];
-            var instance = Activator.CreateInstance(declaringType);
-            ClassInstanceMap.Value.TryAdd(declaringType, instance);
-            return instance;
+            await task;
         }
+    }
 
-        public void StartScope(string tag)
+    private static void SetDataStores(int stream)
+    {
+        var dataStore = DataStoreFactory.GetDataStoresByStream(stream);
+        lock (SuiteDataStore.Store)
         {
-            //no scope
+            SuiteDataStore.Store.Value = DataStoreFactory.SuiteDataStore;
         }
+        lock (SpecDataStore.Store)
+        {
+            SpecDataStore.Store.Value = dataStore?.GetValueOrDefault(DataStoreType.Spec, null);
+        }
+        lock (ScenarioDataStore.Store)
+        {
+            ScenarioDataStore.Store.Value = dataStore?.GetValueOrDefault(DataStoreType.Scenario, null);
+        }
+    }
 
-        public void CloseScope()
-        {
-            //no scope
-        }
 
-        public void ClearCache()
-        {
-            ClassInstanceMap.Value.Clear();
-        }
+
+    public void StartScope(string tag)
+    {
+        //no scope
+    }
+
+    public void CloseScope()
+    {
+        //no scope
+    }
+
+    public void ClearCache()
+    {
+        ClassInstanceMap.Clear();
     }
 }
