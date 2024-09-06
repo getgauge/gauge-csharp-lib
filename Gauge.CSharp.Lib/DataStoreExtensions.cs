@@ -39,5 +39,39 @@ namespace Gauge.CSharp.Lib
                 store.Value.Clear();
             }
         }
+        internal static object Get(this ConcurrentDictionary<object, object> store, string key)
+        {
+            lock (store)
+            {
+                object outVal;
+                var valueExists = store.TryGetValue(key, out outVal);
+                return valueExists ? outVal : null;
+            }
+        }
+
+        internal static T Get<T>(this ConcurrentDictionary<object, object> store, string key)
+        {
+            lock (store)
+            {
+                return (T)store.Get(key);
+            }
+        }
+
+        internal static void Add(this ConcurrentDictionary<object, object> store, string key, object value)
+        {
+            lock (store)
+            {
+                store[key] = value;
+
+            }
+        }
+
+        internal static void Clear(this ConcurrentDictionary<object, object> store)
+        {
+            lock (store)
+            {
+                store.Clear();
+            }
+        }
     }
 }
