@@ -3,46 +3,57 @@
  *  Licensed under the Apache License, Version 2.0
  *  See LICENSE.txt in the project root for license information.
  *----------------------------------------------------------------*/
-using NUnit.Framework;
+namespace Gauge.CSharp.Lib.UnitTests;
 
-namespace Gauge.CSharp.Lib.UnitTests
+[TestFixture]
+public class DataStoreFactoryTests
 {
-    [TestFixture]
-    public class DataStoreFactoryTests
+    [SetUp]
+    public void Setup()
     {
-        [Test]
-        public void ShouldBeAbleToStoreValuesToDatastoreWithoutInitializing()
-        {
-            var dataStore = DataStoreFactory.ScenarioDataStore;
-            dataStore.Add("myKey", "myValue");
-            Assert.AreEqual(dataStore.Get("myKey"), "myValue");
-        }
+        DataStoreFactory.ClearAllDataStores();
+    }
 
-        [Test]
-        public void ShouldGetDataStoreForScenario()
-        {
-            var dataStore = DataStoreFactory.ScenarioDataStore;
+    [Test]
+    public void AddDataStore_ShouldSetTheSuiteDataStore_WhenCalledForSuiteDataStoreType()
+    {
+        DataStoreFactory.AddDataStore(1, DataStoreType.Suite);
+        Assert.IsNotNull(DataStoreFactory.SuiteDataStore);
+    }
 
-            Assert.NotNull(dataStore);
-            Assert.IsInstanceOf<DataStore>(dataStore);
-        }
+    [Test]
+    public void AddDataStore_ShouldNotOverwriteTheSuiteDataStore_WhenCalledForSuiteDataStoreTypeMoreThanOnce()
+    {
+        DataStoreFactory.AddDataStore(1, DataStoreType.Suite);
+        var dataStore = DataStoreFactory.SuiteDataStore;
+        DataStoreFactory.AddDataStore(1, DataStoreType.Suite);
+        Assert.AreSame(dataStore, DataStoreFactory.SuiteDataStore);
+    }
 
-        [Test]
-        public void ShouldGetDataStoreForSpec()
-        {
-            var dataStore = DataStoreFactory.SpecDataStore;
+    [Test]
+    public void AddDataStore_ShouldSetTheSpecDataStore_WhenCalledForSpecDataStoreType()
+    {
+        DataStoreFactory.AddDataStore(1, DataStoreType.Spec);
+        Assert.IsNotNull(DataStoreFactory.GetDataStoresByStream(1)[DataStoreType.Spec]);
+    }
 
-            Assert.NotNull(dataStore);
-            Assert.IsInstanceOf<DataStore>(dataStore);
-        }
+    [Test]
+    public void AddDataStore_ShouldSetTheScenaroDataStore_WhenCalledForScenarioDataStoreType()
+    {
+        DataStoreFactory.AddDataStore(1, DataStoreType.Scenario);
+        Assert.IsNotNull(DataStoreFactory.GetDataStoresByStream(1)[DataStoreType.Scenario]);
+    }
 
-        [Test]
-        public void ShouldGetDataStoreForSuite()
-        {
-            var dataStore = DataStoreFactory.SuiteDataStore;
+    [Test]
+    public void AddDataStore_ShouldKeepSeparateDataStores_WhenCalledForDifferentStreams()
+    {
+        DataStoreFactory.AddDataStore(1, DataStoreType.Scenario);
+        DataStoreFactory.AddDataStore(2, DataStoreType.Scenario);
+        var dict1 = DataStoreFactory.GetDataStoresByStream(1)[DataStoreType.Scenario];
+        var dict2 = DataStoreFactory.GetDataStoresByStream(2)[DataStoreType.Scenario];
 
-            Assert.NotNull(dataStore);
-            Assert.IsInstanceOf<DataStore>(dataStore);
-        }
+        Assert.AreNotSame(dict1, dict2);
+        dict1.Add("mykey", new object());
+        Assert.IsNull(dict2.Get("mykey"));
     }
 }

@@ -44,7 +44,7 @@ public class DataStore
     public T Get<T>(string key)
     {
         var outVal = Get(key);
-        return (outVal is T result) ? result : default;
+        return (T)outVal;
     }
 
     /// <summary>

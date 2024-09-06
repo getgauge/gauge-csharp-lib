@@ -47,11 +47,11 @@ public class DefaultClassInstanceManager : IClassInstanceManager
         }
         lock (SpecDataStore.Store)
         {
-            SpecDataStore.Store.Value = dataStore?.GetValueOrDefault(DataStoreType.Spec, null);
+            SpecDataStore.Store.Value = dataStore.GetValueOrDefault(DataStoreType.Spec, null);
         }
         lock (ScenarioDataStore.Store)
         {
-            ScenarioDataStore.Store.Value = dataStore?.GetValueOrDefault(DataStoreType.Scenario, null);
+            ScenarioDataStore.Store.Value = dataStore.GetValueOrDefault(DataStoreType.Scenario, null);
         }
     }
 

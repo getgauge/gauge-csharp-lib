@@ -1,6 +1,6 @@
 namespace Gauge.CSharp.Lib;
 
-public class SuiteDataStore
+public static class SuiteDataStore
 {
     internal static AsyncLocal<DataStore> Store { get; } = new AsyncLocal<DataStore>();
 

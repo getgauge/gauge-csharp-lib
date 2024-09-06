@@ -11,7 +11,7 @@ function build() {
 
 function test() {
     checkCommand "dotnet"
-    dotnet test -c release ./Gauge.CSharp.Lib.UnitTests/Gauge.CSharp.Lib.UnitTests.csproj
+    dotnet test -c debug ./Gauge.CSharp.Lib.UnitTests/Gauge.CSharp.Lib.UnitTests.csproj
 }
 
 function package() {

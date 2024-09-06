@@ -58,15 +58,25 @@ public static class DataStoreFactory
         var dataStore = new DataStore();
         switch (storeType)
         {
-            case DataStoreType.Suite: SetSuiteDataStore(stream, dataStore); break;
+            case DataStoreType.Suite: SuiteDataStore = dataStore; break;
             case DataStoreType.Spec:
-            case DataStoreType: SetStreamDataStore(stream, storeType, dataStore); break;
+            case DataStoreType.Scenario: SetStreamDataStore(stream, storeType, dataStore); break;
         }
     }
 
-    private static void SetSuiteDataStore(int stream, DataStore dataStore)
+    /// <summary>
+    ///     <remarks>
+    ///         FOR GAUGE INTERNAL USE ONLY.
+    ///     </remarks>
+    ///     Gets a datastore by stream number.
+    /// </summary>
+    internal static void ClearAllDataStores()
     {
-        SuiteDataStore = dataStore;
+        lock (_suiteDataStoreLock)
+        {
+            _suiteDataStore = null;
+        }
+        _dataStores.Clear();
     }
 
     private static void SetStreamDataStore(int stream, DataStoreType storeType, DataStore dataStore)

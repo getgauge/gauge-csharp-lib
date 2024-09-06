@@ -12,7 +12,7 @@ goto :eof
     goto :eof
 
 :test
-    dotnet test -c release ./Gauge.CSharp.Lib.UnitTests/Gauge.CSharp.Lib.UnitTests.csproj
+    dotnet test -c debug ./Gauge.CSharp.Lib.UnitTests/Gauge.CSharp.Lib.UnitTests.csproj
     goto :eof
 
 :package
