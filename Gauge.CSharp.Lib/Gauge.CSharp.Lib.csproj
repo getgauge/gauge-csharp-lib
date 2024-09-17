@@ -1,28 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
-    <Description>CSharp bindings for Gauge. Write CSharp step implementation for Gauge specs. https://gauge.org</Description>
-    <Version>0.10.3</Version>
-    <AssemblyVersion>0.10.3.0</AssemblyVersion>
-    <FileVersion>0.10.3.0</FileVersion>
-    <Authors>getgauge</Authors>
-    <Company>ThoughtWorks Inc.</Company>
-    <Copyright>Copyright © ThoughtWorks Inc. 2018</Copyright>
-    <PackageLicense>LICENSE</PackageLicense>
-    <PackageProjectUrl>https://github.com/getgauge/gauge-csharp-lib</PackageProjectUrl>
-    <PackageIcon>logo.png</PackageIcon>
-    <RepositoryUrl>https://github.com/getgauge/gauge-csharp-lib</RepositoryUrl>
-    <PackageTags>Gauge CSharp Testing</PackageTags>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>gauge_lib.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<Description>CSharp bindings for Gauge. Write CSharp step implementation for Gauge specs. https://gauge.org</Description>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Version>0.11.1</Version>
+		<AssemblyVersion>0.11.1.0</AssemblyVersion>
+		<FileVersion>0.11.1.0</FileVersion>
+		<Authors>getgauge</Authors>
+		<Company>ThoughtWorks Inc.</Company>
+		<Copyright>Copyright © ThoughtWorks Inc. 2018</Copyright>
+		<PackageLicense>LICENSE</PackageLicense>
+		<PackageProjectUrl>https://github.com/getgauge/gauge-csharp-lib</PackageProjectUrl>
+		<PackageIcon>logo.png</PackageIcon>
+		<RepositoryUrl>https://github.com/getgauge/gauge-csharp-lib</RepositoryUrl>
+		<PackageTags>Gauge CSharp Testing</PackageTags>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-      <None Include="logo.png" Pack="true" PackagePath="\"/>
-      <None Include="..\LICENSE" Pack="true" PackagePath="\"/>
-  </ItemGroup>
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<SignAssembly>true</SignAssembly>
+		<AssemblyOriginatorKeyFile>gauge_lib.snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Folder Include="Properties\" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="logo.png" Pack="true" PackagePath="\"/>
+		<None Include="..\LICENSE" Pack="true" PackagePath="\"/>
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
+		<!-- Make assembly visible to test assembly -->
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>$(AssemblyName).UnitTests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 </Project>

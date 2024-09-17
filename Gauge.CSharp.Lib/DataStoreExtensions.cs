@@ -1,40 +1,36 @@
-using System.Collections.Concurrent;
-using System.Threading;
+namespace Gauge.CSharp.Lib;
 
-namespace Gauge.CSharp.Lib
+public static class DataStoreExtensions
 {
-    public static class DataStoreExtensions
+    internal static object Get(this AsyncLocal<DataStore> store, string key)
     {
-        internal static object Get(this ThreadLocal<ConcurrentDictionary<object, object>> store, string key)
+        lock (store)
         {
-            lock (store)
-            {
-                object outVal;
-                var valueExists = store.Value.TryGetValue(key, out outVal);
-                return valueExists ? outVal : null;
-            }
+            return store.Value.Get(key);
         }
+    }
 
-        internal static T Get<T>(this ThreadLocal<ConcurrentDictionary<object, object>> store, string key)
+    internal static T Get<T>(this AsyncLocal<DataStore> store, string key)
+    {
+        lock (store)
         {
-            lock (store)
-            {
-                return (T)store.Get(key);
-            }
+            return store.Value.Get<T>(key);
         }
+    }
 
-        internal static void Add(this ThreadLocal<ConcurrentDictionary<object, object>> store, string key, object value)
+    internal static void Add(this AsyncLocal<DataStore> store, string key, object value)
+    {
+        lock (store)
         {
-            lock (store)
-            {
-                store.Value[key] = value;
-
-            }
+            store.Value.Add(key, value);
         }
+    }
 
-        internal static void Clear(this ThreadLocal<ConcurrentDictionary<object, object>> store)
+    internal static void Clear(this AsyncLocal<DataStore> store)
+    {
+        lock (store)
         {
-            lock (store)
+            if (store.Value != null)
             {
                 store.Value.Clear();
             }
