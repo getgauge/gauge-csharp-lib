@@ -20,4 +20,27 @@ public static class GaugeScreenshots
     {
         ScreenshotFiles.Add(screenshotWriter.TakeScreenShot());
     }
+
+    public static void CaptureByStream(int streamId)
+    {
+        SetDataStores(streamId);
+        ScreenshotFiles.Add(screenshotWriter.TakeScreenShot());
+    }
+
+    private static void SetDataStores(int streamId)
+    {
+        var dataStore = DataStoreFactory.GetDataStoresByStream(streamId);
+        lock (SuiteDataStore.Store)
+        {
+            SuiteDataStore.Store.Value = DataStoreFactory.SuiteDataStore;
+        }
+        lock (SpecDataStore.Store)
+        {
+            SpecDataStore.Store.Value = dataStore.GetValueOrDefault(DataStoreType.Spec, null);
+        }
+        lock (ScenarioDataStore.Store)
+        {
+            ScenarioDataStore.Store.Value = dataStore.GetValueOrDefault(DataStoreType.Scenario, null);
+        }
+    }
 }
