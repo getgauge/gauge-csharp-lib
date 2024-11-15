@@ -18,7 +18,7 @@ public class DataStoreFactoryTests
     public void AddDataStore_ShouldSetTheSuiteDataStore_WhenCalledForSuiteDataStoreType()
     {
         DataStoreFactory.AddDataStore(1, DataStoreType.Suite);
-        Assert.IsNotNull(DataStoreFactory.SuiteDataStore);
+        Assert.That(DataStoreFactory.SuiteDataStore, Is.Not.Null);
     }
 
     [Test]
@@ -27,21 +27,21 @@ public class DataStoreFactoryTests
         DataStoreFactory.AddDataStore(1, DataStoreType.Suite);
         var dataStore = DataStoreFactory.SuiteDataStore;
         DataStoreFactory.AddDataStore(1, DataStoreType.Suite);
-        Assert.AreSame(dataStore, DataStoreFactory.SuiteDataStore);
+        Assert.That(dataStore, Is.SameAs(DataStoreFactory.SuiteDataStore));
     }
 
     [Test]
     public void AddDataStore_ShouldSetTheSpecDataStore_WhenCalledForSpecDataStoreType()
     {
         DataStoreFactory.AddDataStore(1, DataStoreType.Spec);
-        Assert.IsNotNull(DataStoreFactory.GetDataStoresByStream(1)[DataStoreType.Spec]);
+        Assert.That(DataStoreFactory.GetDataStoresByStream(1)[DataStoreType.Spec], Is.Not.Null);
     }
 
     [Test]
     public void AddDataStore_ShouldSetTheScenaroDataStore_WhenCalledForScenarioDataStoreType()
     {
         DataStoreFactory.AddDataStore(1, DataStoreType.Scenario);
-        Assert.IsNotNull(DataStoreFactory.GetDataStoresByStream(1)[DataStoreType.Scenario]);
+        Assert.That(DataStoreFactory.GetDataStoresByStream(1)[DataStoreType.Scenario], Is.Not.Null);
     }
 
     [Test]
@@ -52,8 +52,8 @@ public class DataStoreFactoryTests
         var dict1 = DataStoreFactory.GetDataStoresByStream(1)[DataStoreType.Scenario];
         var dict2 = DataStoreFactory.GetDataStoresByStream(2)[DataStoreType.Scenario];
 
-        Assert.AreNotSame(dict1, dict2);
+        Assert.That(dict1, Is.Not.SameAs(dict2));
         dict1.Add("mykey", new object());
-        Assert.IsNull(dict2.Get("mykey"));
+        Assert.That(dict2.Get("mykey"), Is.Null);
     }
 }

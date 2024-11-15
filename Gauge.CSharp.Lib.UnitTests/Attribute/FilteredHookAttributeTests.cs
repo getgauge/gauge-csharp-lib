@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Gauge.CSharp.Lib.Attribute;
-using NUnit.Framework;
+﻿using Gauge.CSharp.Lib.Attribute;
 
 namespace Gauge.CSharp.Lib.UnitTests.Attribute
 {
@@ -25,18 +23,18 @@ namespace Gauge.CSharp.Lib.UnitTests.Attribute
         [Test]
         public void ShouldCreateAttributeWithMultipleTags()
         {
-            var filterTags = new[] {"foo", "bar"};
+            var filterTags = new[] { "foo", "bar" };
             var filteredHookAttribute = new TestHookAttribute(filterTags);
 
             foreach (var filterTag in filterTags)
-                Assert.IsTrue(filteredHookAttribute.FilterTags.Contains(filterTag));
+                Assert.That(filteredHookAttribute.FilterTags, Does.Contain(filterTag));
         }
 
         [Test]
         public void ShouldCreateAttributeWithNoParameters()
         {
             var filteredHookAttribute = new TestHookAttribute();
-            Assert.IsNotNull(filteredHookAttribute);
+            Assert.That(filteredHookAttribute, Is.Not.Null);
         }
 
         [Test]
@@ -44,7 +42,7 @@ namespace Gauge.CSharp.Lib.UnitTests.Attribute
         {
             var filterTag = "foo";
             var filteredHookAttribute = new TestHookAttribute(filterTag);
-            Assert.IsTrue(filteredHookAttribute.FilterTags.Contains(filterTag));
+            Assert.That(filteredHookAttribute.FilterTags, Does.Contain(filterTag));
         }
     }
 }
