@@ -5,27 +5,30 @@
  *----------------------------------------------------------------*/
 
 
-using System;
-using System.Collections.Generic;
-
 /**
 * Gives the information about the current execution at runtime - spec, scenario, step that is running.
 */
 
-namespace Gauge.CSharp.Lib {
+namespace Gauge.CSharp.Lib
+{
 
     [Serializable()]
-    public class ExecutionContext {
-        public ExecutionContext(Specification specification, Scenario scenario, StepDetails stepDetails) {
+    public class ExecutionContext
+    {
+        public ExecutionContext(Specification specification, Scenario scenario, StepDetails stepDetails, CurrentDataStores dataStores)
+        {
             this.CurrentSpecification = specification;
             this.CurrentScenario = scenario;
             this.CurrentStep = stepDetails;
+            this.DataStores = dataStores;
         }
 
-        public ExecutionContext() {
+        public ExecutionContext()
+        {
             this.CurrentSpecification = new Specification();
             this.CurrentScenario = new Scenario();
             this.CurrentStep = new StepDetails();
+            DataStores = new CurrentDataStores();
         }
 
         /**
@@ -46,27 +49,35 @@ namespace Gauge.CSharp.Lib {
         */
         public StepDetails CurrentStep { get; }
 
+        /// <summary>Gets the DataStores for the current context</summary>
+        internal CurrentDataStores DataStores { get; private init; }
+
         /**
         * @return - All the valid tags (including scenario and spec tags) at the execution level.
         */
-        public List<String> GetAllTags() {
+        public List<String> GetAllTags()
+        {
             HashSet<String> specTags = new HashSet<String>(CurrentSpecification.Tags);
-            foreach (var tag in CurrentScenario.Tags){
-                specTags.Add(tag);    
+            foreach (var tag in CurrentScenario.Tags)
+            {
+                specTags.Add(tag);
             }
             return new List<String>(specTags);
         }
 
         [Serializable()]
-        public class Specification {
-            public Specification(String name, String fileName, bool isFailing, IEnumerable<String> tags) {
+        public class Specification
+        {
+            public Specification(String name, String fileName, bool isFailing, IEnumerable<String> tags)
+            {
                 this.Name = name;
                 this.FileName = fileName;
                 this.IsFailing = isFailing;
                 this.Tags = tags;
             }
 
-            public Specification() {
+            public Specification()
+            {
                 Tags = new List<String>();
             }
 
@@ -90,11 +101,13 @@ namespace Gauge.CSharp.Lib {
             */
             public String Name { get; } = "";
         }
-        
+
         [Serializable()]
-        public class StepDetails {
-            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage, 
-                                List<List<string>> parameters) {
+        public class StepDetails
+        {
+            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage,
+                                List<List<string>> parameters)
+            {
                 this.Text = text;
                 this.StackTrace = stackTrace;
                 this.ErrorMessage = errorMessage;
@@ -102,7 +115,8 @@ namespace Gauge.CSharp.Lib {
                 this.Parameters = parameters;
             }
 
-            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage) {
+            public StepDetails(String text, bool isFailing, string stackTrace, string errorMessage)
+            {
                 this.Text = text;
                 this.StackTrace = stackTrace;
                 this.ErrorMessage = errorMessage;
@@ -110,7 +124,7 @@ namespace Gauge.CSharp.Lib {
                 this.Parameters = null;
             }
 
-            public StepDetails() {}
+            public StepDetails() { }
 
             /**
             * @return True if the current spec or scenario or step is failing due to error.
@@ -139,15 +153,18 @@ namespace Gauge.CSharp.Lib {
         }
 
         [Serializable]
-        public class Scenario {
-            public Scenario(String name, bool isFailing, IEnumerable<String> tags, int maxRetries, int currentRetry) {
+        public class Scenario
+        {
+            public Scenario(String name, bool isFailing, IEnumerable<String> tags, int maxRetries, int currentRetry)
+            {
                 this.Name = name;
                 this.IsFailing = isFailing;
                 this.Tags = tags;
                 this.Retries = new RetriesInfo(maxRetries: maxRetries, curruntRetry: currentRetry);
             }
 
-            public Scenario() {
+            public Scenario()
+            {
                 Tags = new List<String>();
                 Retries = new RetriesInfo();
             }
@@ -174,13 +191,15 @@ namespace Gauge.CSharp.Lib {
         }
 
         [Serializable]
-        public class RetriesInfo {
-            public RetriesInfo(int maxRetries, int curruntRetry) {
+        public class RetriesInfo
+        {
+            public RetriesInfo(int maxRetries, int curruntRetry)
+            {
                 this.MaxRetries = maxRetries;
                 this.CurrentRetry = curruntRetry;
             }
 
-            public RetriesInfo() {}
+            public RetriesInfo() { }
 
             /**
             * @return the count of maximum execution retries
@@ -190,7 +209,18 @@ namespace Gauge.CSharp.Lib {
             /**
             * @return the count of the current execution retry
             */
-            public int CurrentRetry{ get; } = 0;
+            public int CurrentRetry { get; } = 0;
+        }
+
+        [Serializable]
+        public class CurrentDataStores()
+        {
+            /// <summary>Gets the Suite DataStore for this context</summary>
+            public DataStore SuiteDataStore { get; set; }
+            /// <summary>Gets the Spec DataStore for this context</summary>
+            public DataStore SpecDataStore { get; set; }
+            /// <summary>Gets the Scenario DataStore for this context</summary>
+            public DataStore ScenarioDataStore { get; set; }
         }
     }
 }

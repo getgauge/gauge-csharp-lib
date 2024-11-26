@@ -14,7 +14,7 @@ public interface IClassInstanceManager
 
     object Get(Type declaringType);
 
-    Task InvokeMethod(MethodInfo method, int stream, params object[] parameters);
+    Task InvokeMethod(MethodInfo method, ExecutionContext context, params object[] parameters);
 
 
     void StartScope(string tag);

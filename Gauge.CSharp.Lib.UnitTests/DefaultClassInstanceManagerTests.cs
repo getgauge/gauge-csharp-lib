@@ -9,12 +9,6 @@ namespace Gauge.CSharp.Lib.UnitTests;
 [TestFixture]
 public class DefaultClassInstanceManagerTests
 {
-    [SetUp]
-    public void SetUp()
-    {
-        DataStoreFactory.ClearAllDataStores();
-    }
-
     [Test]
     public void ShouldGetInstanceForType()
     {
@@ -39,11 +33,12 @@ public class DefaultClassInstanceManagerTests
     [Test]
     public async Task InvokeMethod_ShouldCreateInstanceAndInvokeMethod_WhenInstanceIsNotCached()
     {
+        var context = new ExecutionContext();
         var instanceManager = new DefaultClassInstanceManager();
         var methodInfo = typeof(MethodInvokeTests).GetMethod(nameof(MethodInvokeTests.InvokeMethod1));
         MethodInvokeTests.InvokeMethod1Called = false;
 
-        await instanceManager.InvokeMethod(methodInfo, 1);
+        await instanceManager.InvokeMethod(methodInfo, context);
 
         Assert.That(MethodInvokeTests.InvokeMethod1Called);
     }
@@ -52,13 +47,14 @@ public class DefaultClassInstanceManagerTests
     public async Task InvokeMethod_ShouldSetDataStores_WhenDataStoresAreInitialized()
     {
         var instanceManager = new DefaultClassInstanceManager();
-        DataStoreFactory.AddDataStore(1, DataStoreType.Suite);
-        DataStoreFactory.AddDataStore(1, DataStoreType.Spec);
-        DataStoreFactory.AddDataStore(1, DataStoreType.Scenario);
+        var context = new ExecutionContext();
+        context.DataStores.SuiteDataStore = new DataStore();
+        context.DataStores.SpecDataStore = new DataStore();
+        context.DataStores.ScenarioDataStore = new DataStore();
         var methodInfo = typeof(MethodInvokeTests).GetMethod(nameof(MethodInvokeTests.InvokeMethod2));
         MethodInvokeTests.InvokeMethod2Called = false;
 
-        await instanceManager.InvokeMethod(methodInfo, 1);
+        await instanceManager.InvokeMethod(methodInfo, context);
 
         Assert.That(MethodInvokeTests.InvokeMethod2Called);
     }
@@ -67,10 +63,11 @@ public class DefaultClassInstanceManagerTests
     public async Task InvokeMethod_ShouldNotFail_WhenMethodInvokedIsNotAsync()
     {
         var instanceManager = new DefaultClassInstanceManager();
+        var context = new ExecutionContext();
         var methodInfo = typeof(MethodInvokeTests).GetMethod(nameof(MethodInvokeTests.InvokeMethod3));
         MethodInvokeTests.InvokeMethod3Called = false;
 
-        await instanceManager.InvokeMethod(methodInfo, 1);
+        await instanceManager.InvokeMethod(methodInfo, context);
 
         Assert.That(MethodInvokeTests.InvokeMethod3Called);
     }
