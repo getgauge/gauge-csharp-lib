@@ -27,7 +27,7 @@ public class DataStoreTests
         _dataStore.Add("fruit", "apple");
         _dataStore.Clear();
 
-        Assert.AreEqual(_dataStore.Count, 0);
+        Assert.That(_dataStore.Count, Is.EqualTo(0));
     }
 
     [Test]
@@ -36,7 +36,7 @@ public class DataStoreTests
         _dataStore.Add("fruit", "banana");
         var fruit = _dataStore.Get("banana");
 
-        Assert.IsNull(fruit);
+        Assert.That(fruit, Is.Null);
     }
 
     [Test]
@@ -45,14 +45,14 @@ public class DataStoreTests
         _dataStore.Add("banana", new Fruit { Name = "Banana" });
         var fruit = _dataStore.Get<Fruit>("banana");
 
-        Assert.IsInstanceOf<Fruit>(fruit);
-        Assert.AreEqual("Banana", fruit.Name);
+        Assert.That(fruit, Is.InstanceOf<Fruit>());
+        Assert.That(fruit.Name, Is.EqualTo("Banana"));
     }
 
     [Test]
     public void ShouldInitializeDataStore()
     {
-        Assert.AreEqual(_dataStore.Count, 0);
+        Assert.That(_dataStore.Count, Is.EqualTo(0));
     }
 
     public class Sample
@@ -68,7 +68,7 @@ public class DataStoreTests
         _dataStore.Add("bar", new Sample { Name = "Hello", Country = "India" });
         var value = _dataStore.Get("bar") as Sample;
 
-        Assert.AreEqual(value.Name, "Hello");
+        Assert.That(value.Name, Is.EqualTo("Hello"));
     }
 
     [Test]
@@ -76,8 +76,8 @@ public class DataStoreTests
     {
         _dataStore.Add("foo", 23);
 
-        Assert.AreEqual(_dataStore.Count, 1);
-        Assert.AreEqual(_dataStore.Get("foo"), 23);
+        Assert.That(_dataStore.Count, Is.EqualTo(1));
+        Assert.That(_dataStore.Get("foo"), Is.EqualTo(23));
     }
 
     [Test]
@@ -95,7 +95,7 @@ public class DataStoreTests
 
         var fruit = _dataStore.Get<Fruit>("random");
 
-        Assert.IsNull(fruit);
+        Assert.That(fruit, Is.Null);
     }
 
     [Test]
@@ -112,6 +112,6 @@ public class DataStoreTests
 
         var value = _dataStore.Get("foo");
 
-        Assert.AreEqual(value, "rumpelstiltskin");
+        Assert.That(value, Is.EqualTo("rumpelstiltskin"));
     }
 }
