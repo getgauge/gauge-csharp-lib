@@ -27,9 +27,9 @@ public class DefaultClassInstanceManager : IClassInstanceManager
         return instance;
     }
 
-    public async Task InvokeMethod(MethodInfo method, int stream, params object[] parameters)
+    public async Task InvokeMethod(MethodInfo method, ExecutionContext context, params object[] parameters)
     {
-        SetDataStores(stream);
+        SetDataStores(context.DataStores);
         var instance = Get(method.DeclaringType);
         var response = method.Invoke(instance, parameters);
         if (response is Task task)
@@ -38,20 +38,19 @@ public class DefaultClassInstanceManager : IClassInstanceManager
         }
     }
 
-    private static void SetDataStores(int stream)
+    private static void SetDataStores(ExecutionContext.CurrentDataStores dataStores)
     {
-        var dataStore = DataStoreFactory.GetDataStoresByStream(stream);
         lock (SuiteDataStore.Store)
         {
-            SuiteDataStore.Store.Value = DataStoreFactory.SuiteDataStore;
+            SuiteDataStore.Store.Value = dataStores.SuiteDataStore;
         }
         lock (SpecDataStore.Store)
         {
-            SpecDataStore.Store.Value = dataStore.GetValueOrDefault(DataStoreType.Spec, null);
+            SpecDataStore.Store.Value = dataStores.SpecDataStore;
         }
         lock (ScenarioDataStore.Store)
         {
-            ScenarioDataStore.Store.Value = dataStore.GetValueOrDefault(DataStoreType.Scenario, null);
+            ScenarioDataStore.Store.Value = dataStores.ScenarioDataStore;
         }
     }
 
